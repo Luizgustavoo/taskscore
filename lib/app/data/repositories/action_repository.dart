@@ -27,4 +27,13 @@ class ActionRepository {
       print(e);
     }
   }
+
+  removeAction(int id) async {
+    try {
+      var response = await apiClient.removeAction(id);
+      return response;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

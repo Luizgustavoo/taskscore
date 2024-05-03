@@ -29,9 +29,6 @@ class StudentApiClient {
           content: const Text(
               'O token de autenticação expirou, faça login novamente.'),
         );
-        // var box = GetStorage('credenciado');
-        // box.erase();
-        // Get.offAllNamed('/login');
       }
     } catch (err) {
       throw Exception(err);

@@ -65,4 +65,13 @@ class ActionController extends GetxController {
     selectedActions.clear();
     return listActionStudent;
   }
+
+  Future<void> removeAction(int id) async {
+    try {
+      listActions.value = await repository.removeAction(id);
+      update();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

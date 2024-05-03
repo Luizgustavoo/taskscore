@@ -54,4 +54,27 @@ class ActionApiClient {
       print('Erro ao enviar dados: $error');
     }
   }
+
+  removeAction(int id) async {
+    var loginUrl = Uri.parse('$baseUrl/removeracaoaluno');
+    try {
+      var response =
+          await httpClient.post(loginUrl, body: {'id': id.toString()});
+
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401) {
+        Get.snackbar(
+          'Falha',
+          'Ação não removida',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }

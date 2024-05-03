@@ -25,36 +25,34 @@ class CustomStudentCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(5),
       color: isSelected ? Colors.blue[100] : null,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListTile(
-          onTap: onTap,
-          leading: avatar,
-          title: Text(
-            title,
-            style: const TextStyle(
-                fontFamily: 'Poppins', overflow: TextOverflow.ellipsis),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 35,
-                height: 35,
-                child: Image.asset('assets/images/coin.png'),
+      child: ListTile(
+        minVerticalPadding: 25,
+        onTap: onTap,
+        leading: avatar,
+        title: Text(
+          title,
+          style: const TextStyle(
+              fontFamily: 'Poppins', overflow: TextOverflow.ellipsis),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 35,
+              height: 35,
+              child: Image.asset('assets/images/coin.png'),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '$score',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: colorScore,
+                fontFamily: 'Poppinss',
               ),
-              const SizedBox(width: 4),
-              Text(
-                '$score',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: colorScore,
-                  fontFamily: 'Poppinss',
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:taskscore/app/data/base_url.dart';
 import 'package:taskscore/app/data/controllers/action_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
+import 'package:taskscore/app/data/models/action_model_student.dart';
 import 'package:taskscore/app/widgets/custom_app_bar.dart';
 import 'package:taskscore/app/widgets/custom_student_card.dart';
 import 'package:taskscore/app/widgets/modals/action_modal.dart';
+import 'package:taskscore/app/widgets/modals/custom_action_modal.dart';
 
 class StudentView extends GetView<StudentController> {
   const StudentView({super.key});
@@ -48,16 +50,101 @@ class StudentView extends GetView<StudentController> {
                           controller.listStudents[index].fotoPessoa.toString();
                       return CustomStudentCard(
                         title: controller.listStudents[index].nomePessoa!,
-                        avatar: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: controller
-                                  .listStudents[index].fotoPessoa
-                                  .toString()
-                                  .isEmpty
-                              ? const AssetImage(
-                                  'assets/images/default_avatar.jpg')
-                              : NetworkImage('$foto/$fotoPessoa')
-                                  as ImageProvider,
+                        avatar: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            controller.listStudents[index].actions!.isNotEmpty
+                                ? InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          List<ActionModelStudent> actions =
+                                              controller
+                                                  .listStudents[index].actions!;
+                                          return ListView.builder(
+                                              padding: const EdgeInsets.all(12),
+                                              itemCount: actions.length,
+                                              itemBuilder: (context, i) {
+                                                return Card(
+                                                  child: ListTile(
+                                                    leading: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 35,
+                                                          height: 35,
+                                                          child: Image.asset(
+                                                              'assets/images/coin.png'),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 4),
+                                                        Text(
+                                                          '${actions[i].nota}',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 20,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppinss',
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    trailing: IconButton(
+                                                        onPressed: () {
+                                                          final actionController =
+                                                              Get.put(
+                                                                  ActionController());
+                                                          actionController
+                                                              .removeAction(
+                                                                  actions[i]
+                                                                      .id!);
+                                                          actions.removeAt(i);
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .delete_outline_rounded,
+                                                          color: Colors.red,
+                                                        )),
+                                                    title: Text(
+                                                      actions[i].acao!,
+                                                      style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.info_outline,
+                                      size: 28,
+                                    ),
+                                  )
+                                : const SizedBox(
+                                    width: 28,
+                                    height: 28,
+                                  ),
+                            const SizedBox(width: 5),
+                            CircleAvatar(
+                              radius: 25,
+                              backgroundImage: controller
+                                      .listStudents[index].fotoPessoa
+                                      .toString()
+                                      .isEmpty
+                                  ? const AssetImage(
+                                      'assets/images/default_avatar.jpg')
+                                  : NetworkImage('$foto/$fotoPessoa')
+                                      as ImageProvider,
+                            ),
+                          ],
                         ),
                         score: controller.listStudents[index].cash != null
                             ? int.parse(
