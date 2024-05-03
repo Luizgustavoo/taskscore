@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:taskscore/app/data/base_url.dart';
+import 'package:taskscore/app/utils/auth_storage.dart';
 
 class StudentApiClient {
   final http.Client httpClient = http.Client();
@@ -18,7 +19,8 @@ class StudentApiClient {
         "dia": dia,
         "aula": aula,
         "horario": horario,
-        "oficina": oficina
+        "oficina": oficina,
+        "teacher_id": AuthStorage.getTeacherId().toString()
       });
       if (response.statusCode == 200) {
         return json.decode(response.body);

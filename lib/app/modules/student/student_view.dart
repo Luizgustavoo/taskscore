@@ -8,7 +8,6 @@ import 'package:taskscore/app/data/models/action_model_student.dart';
 import 'package:taskscore/app/widgets/custom_app_bar.dart';
 import 'package:taskscore/app/widgets/custom_student_card.dart';
 import 'package:taskscore/app/widgets/modals/action_modal.dart';
-import 'package:taskscore/app/widgets/modals/custom_action_modal.dart';
 
 class StudentView extends GetView<StudentController> {
   const StudentView({super.key});
@@ -59,10 +58,11 @@ class StudentView extends GetView<StudentController> {
                                       showModalBottomSheet(
                                         context: context,
                                         builder: (context) {
-                                          List<ActionModelStudent> actions =
-                                              controller
-                                                  .listStudents[index].actions!;
-                                          return ListView.builder(
+                                          RxList<ActionModelStudent> actions =
+                                              <ActionModelStudent>[].obs;
+                                          actions.value = controller
+                                              .listStudents[index].actions!;
+                                          return Obx(() => ListView.builder(
                                               padding: const EdgeInsets.all(12),
                                               itemCount: actions.length,
                                               itemBuilder: (context, i) {
@@ -95,15 +95,30 @@ class StudentView extends GetView<StudentController> {
                                                       ],
                                                     ),
                                                     trailing: IconButton(
-                                                        onPressed: () {
-                                                          final actionController =
-                                                              Get.put(
-                                                                  ActionController());
-                                                          actionController
-                                                              .removeAction(
-                                                                  actions[i]
-                                                                      .id!);
-                                                          actions.removeAt(i);
+                                                        onPressed: () async {
+                                                          showConfirmationDialog(
+                                                            context,
+                                                            actions[i].id!,
+                                                            () async {
+                                                              final actionController =
+                                                                  Get.put(
+                                                                      ActionController());
+                                                              await actionController
+                                                                  .removeAction(
+                                                                      actions[i]
+                                                                          .id!);
+
+                                                              actions
+                                                                  .removeAt(i);
+                                                              controller
+                                                                  .getStudents();
+
+                                                              if (actions
+                                                                  .isEmpty) {
+                                                                Get.back();
+                                                              }
+                                                            },
+                                                          );
                                                         },
                                                         icon: const Icon(
                                                           Icons
@@ -119,7 +134,7 @@ class StudentView extends GetView<StudentController> {
                                                     ),
                                                   ),
                                                 );
-                                              });
+                                              }));
                                         },
                                       );
                                     },
@@ -129,9 +144,9 @@ class StudentView extends GetView<StudentController> {
                                     ),
                                   )
                                 : const SizedBox(
-                                    width: 28,
-                                    height: 28,
-                                  ),
+                                    // width: 28,
+                                    // height: 28,
+                                    ),
                             const SizedBox(width: 5),
                             CircleAvatar(
                               radius: 25,
@@ -166,58 +181,91 @@ class StudentView extends GetView<StudentController> {
           ],
         ),
       ),
-      floatingActionButton: Obx(() => SpeedDial(
-            buttonSize: buttonSize,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            isOpenOnStart: false,
-            visible: controller.selectedIndexes.isEmpty ? false : true,
-            animatedIcon: AnimatedIcons.menu_close,
-            children: [
-              SpeedDialChild(
-                backgroundColor: Colors.green,
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Image.asset('assets/images/coin.png'),
-                ),
-                label: 'Positivo',
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      final actionController = Get.put(ActionController());
-                      actionController.getActions();
-                      return ActionModal(
-                        actionList: actionController.positiveActions,
-                      );
-                    },
-                  );
-                },
+      floatingActionButton: Obx(
+        () => SpeedDial(
+          buttonSize: buttonSize,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          isOpenOnStart: false,
+          visible: controller.selectedIndexes.isEmpty ? false : true,
+          animatedIcon: AnimatedIcons.menu_close,
+          children: [
+            SpeedDialChild(
+              backgroundColor: Colors.green,
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: Image.asset('assets/images/coin.png'),
               ),
-              SpeedDialChild(
-                backgroundColor: Colors.red,
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Image.asset('assets/images/coin.png'),
-                ),
-                label: 'Negativo',
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      final actionController = Get.put(ActionController());
-                      actionController.getActions();
-                      return ActionModal(
-                        actionList: actionController.negativeActions,
-                      );
-                    },
-                  );
-                },
+              label: 'Positivo',
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    final actionController = Get.put(ActionController());
+                    actionController.getActions();
+                    return ActionModal(
+                      actionList: actionController.positiveActions,
+                    );
+                  },
+                );
+              },
+            ),
+            SpeedDialChild(
+              backgroundColor: Colors.red,
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: Image.asset('assets/images/coin.png'),
               ),
-            ],
-          )),
+              label: 'Negativo',
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    final actionController = Get.put(ActionController());
+                    actionController.getActions();
+                    return ActionModal(
+                      actionList: actionController.negativeActions,
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showConfirmationDialog(
+      BuildContext context, int actionId, VoidCallback onConfirm) {
+    Get.defaultDialog(
+      title: "Confirmação",
+      titleStyle:
+          const TextStyle(fontFamily: 'Poppinss', color: Colors.black87),
+      middleText: "Tem certeza de que deseja remover esta ação?",
+      middleTextStyle: const TextStyle(fontFamily: 'Poppins'),
+      confirm: ElevatedButton(
+        onPressed: () {
+          onConfirm();
+
+          Get.back();
+        },
+        child: const Text(
+          "Sim",
+          style: TextStyle(fontFamily: 'Poppins', color: Colors.white),
+        ),
+      ),
+      cancel: ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: const Text(
+          "Não",
+          style: TextStyle(fontFamily: 'Poppins', color: Colors.white),
+        ),
+      ),
     );
   }
 }

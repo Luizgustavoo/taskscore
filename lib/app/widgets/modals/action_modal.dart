@@ -15,7 +15,7 @@ class ActionModal extends StatefulWidget {
 
 class _ActionModalState extends State<ActionModal> {
   final actionController = Get.put(ActionController());
-
+  RxInt quantity = 0.obs;
   @override
   Widget build(BuildContext context) {
     actionController.clearIndex();
@@ -30,14 +30,10 @@ class _ActionModalState extends State<ActionModal> {
                 itemCount: widget.actionList!.length,
                 itemBuilder: (context, index) {
                   return Obx(() => CustomActionCard(
+                        actionList: widget.actionList!,
+                        index: index,
                         title: widget.actionList![index].acao!,
                         score: int.parse(widget.actionList![index].nota!),
-                        isSelected:
-                            actionController.selectedIndexes.contains(index),
-                        onTap: () {
-                          actionController.toggleSelectedActions(
-                              index, int.parse(widget.actionList![index].id!));
-                        },
                       ));
                 },
               ),
@@ -106,6 +102,8 @@ class _ActionModalState extends State<ActionModal> {
                           backgroundColor: Colors.green,
                           colorText: Colors.white);
                       final studentController = Get.put(StudentController());
+                      studentController.selectedIndexes.clear();
+                      studentController.selectedStudents.clear();
                       studentController.getStudents();
                     } else {
                       Get.snackbar('Falha', mensagem['objeto'],

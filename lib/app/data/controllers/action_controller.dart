@@ -39,8 +39,8 @@ class ActionController extends GetxController {
     }
   }
 
-  void toggleSelectedActions(int index, int id) {
-    if (selectedIndexes.contains(index)) {
+  void toggleSelectedActions(int index, int id, dynamic type) {
+    if (type == 'remove') {
       selectedIndexes.remove(index);
       selectedActions.remove(id);
     } else {
