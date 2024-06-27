@@ -58,7 +58,9 @@ class CustomDrawer extends StatelessWidget {
                 'Cadastro de Ações',
                 style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed('/action');
+              },
             ),
             ListTile(
               leading: const Icon(Icons.exit_to_app, color: Colors.red),

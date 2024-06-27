@@ -51,7 +51,7 @@ class StudentController extends GetxController {
           await repository.getAll(dia!, numeroAula!, idHorario!, idOficina!);
       update();
     } catch (e) {
-      print(e);
+      Exception(e);
     }
   }
 

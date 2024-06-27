@@ -46,7 +46,7 @@ class ClassController extends GetxController {
       aulasPorDia.value = await repository.getAll(projeto, periodo);
       update();
     } catch (e) {
-      print(e);
+      Exception(e);
     }
   }
 }

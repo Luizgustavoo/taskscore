@@ -69,7 +69,7 @@ class HomeController extends GetxController {
       listRankings.value = await repository.getAll();
       update();
     } catch (e) {
-      print(e);
+      Exception(e);
     }
   }
 }

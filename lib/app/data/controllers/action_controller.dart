@@ -1,20 +1,33 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
 import 'package:taskscore/app/data/models/action_model.dart';
+import 'package:taskscore/app/data/models/category_action.dart';
 import 'package:taskscore/app/data/repositories/action_repository.dart';
 
 class ActionController extends GetxController {
   RxList<ActionModel> listActions = <ActionModel>[].obs;
+  RxList<CategoryAction> listCategoryActions = <CategoryAction>[].obs;
 
   RxList<bool> itemSelections = RxList<bool>([]);
 
   RxList<ActionModel> positiveActions = <ActionModel>[].obs;
   RxList<ActionModel> negativeActions = <ActionModel>[].obs;
 
+  TextEditingController acaoController = TextEditingController();
+  TextEditingController notaController = TextEditingController();
+
   RxList<int> selectedIndexes = <int>[].obs;
+  RxInt? categorySelected = 0.obs;
   List<int> selectedActions = [];
 
   final repository = Get.put(ActionRepository());
+
+  @override
+  void onInit() {
+    getActions();
+    super.onInit();
+  }
 
   Future<void> getActions() async {
     try {
@@ -35,8 +48,19 @@ class ActionController extends GetxController {
 
       update();
     } catch (e) {
-      print(e);
+      Exception(e);
     }
+  }
+
+  Future<void> getCategoryActions() async {
+    // isLoading.value = true;
+    try {
+      listCategoryActions.value = await repository.getAllCategoryAction();
+      update();
+    } catch (e) {
+      Exception(e);
+    }
+    // isLoading.value = false;
   }
 
   void toggleSelectedActions(int index, int id, dynamic type) {
@@ -71,7 +95,22 @@ class ActionController extends GetxController {
       listActions.value = await repository.removeAction(id);
       update();
     } catch (e) {
-      print(e);
+      Exception(e);
+    }
+  }
+
+  Future<void> createAction() async {
+    ActionModel actionModel = ActionModel(
+      acao: acaoController.text,
+      nota: notaController.text,
+      // tipoAcao: tipoAcao,
+      categoriaacaoId: categorySelected!.value.toString(),
+    );
+    try {
+      listActions.value = await repository.createAction(actionModel);
+      update();
+    } catch (e) {
+      Exception(e);
     }
   }
 }

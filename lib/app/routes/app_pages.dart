@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
+import 'package:taskscore/app/data/bindings/action_binding.dart';
 import 'package:taskscore/app/data/bindings/class_binding.dart';
 import 'package:taskscore/app/data/bindings/home_bindings.dart';
 import 'package:taskscore/app/data/bindings/login_binding.dart';
 import 'package:taskscore/app/data/bindings/splash_binding.dart';
 import 'package:taskscore/app/data/bindings/student_binding.dart';
+import 'package:taskscore/app/modules/action/action_view.dart';
 import 'package:taskscore/app/modules/class/class_view.dart';
 import 'package:taskscore/app/modules/home/home_view.dart';
 import 'package:taskscore/app/modules/login/login_view.dart';
@@ -37,6 +39,11 @@ class AppPages {
       name: Routes.SPLASH,
       page: () => SplashScreen(),
       binding: SplashBinding(),
+    ),
+    GetPage(
+      name: Routes.ACTION,
+      page: () => const ActionView(),
+      binding: ActionBinding(),
     ),
   ];
 }

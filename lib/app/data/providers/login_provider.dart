@@ -25,7 +25,7 @@ class LoginApiClient {
         );
       }
     } catch (e) {
-      print(e);
+      Exception(e);
     }
     return null;
   }
