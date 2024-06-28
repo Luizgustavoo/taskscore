@@ -45,7 +45,9 @@ class ActionView extends GetView<ActionController> {
                   itemCount: controller.listActions.length,
                   itemBuilder: (BuildContext context, int index) {
                     final action = controller.listActions[index];
-                    return CustomListActionCard(action: action);
+                    return CustomListActionCard(
+                      action: action,
+                    );
                   },
                 ),
               );
@@ -62,7 +64,9 @@ class ActionView extends GetView<ActionController> {
           showModalBottomSheet(
               context: context,
               builder: (context) {
-                return const CreateActionModal();
+                return CreateActionModal(
+                  controller: controller,
+                );
               });
         },
         child: const Icon(

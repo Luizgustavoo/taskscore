@@ -4,8 +4,9 @@ import 'package:taskscore/app/data/controllers/action_controller.dart';
 import 'package:taskscore/app/data/models/category_action.dart';
 
 class CreateActionModal extends StatelessWidget {
-  const CreateActionModal({super.key});
+  const CreateActionModal({super.key, required this.controller});
 
+  final ActionController controller;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,8 +19,7 @@ class CreateActionModal extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Form(
-              child: Column(
+          Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,6 +30,7 @@ class CreateActionModal extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               TextFormField(
+                controller: controller.acaoController,
                 decoration: InputDecoration(
                   labelText: 'Nome da Ação',
                   border: OutlineInputBorder(
@@ -41,8 +42,9 @@ class CreateActionModal extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               TextFormField(
+                controller: controller.notaController,
                 decoration: InputDecoration(
-                  labelText: 'Valor',
+                  labelText: 'Nota',
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(10),
@@ -52,7 +54,7 @@ class CreateActionModal extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Obx(() {
-                final actionController = ActionController();
+                final actionController = Get.find<ActionController>();
                 return DropdownButtonFormField<int>(
                   isDense: true,
                   menuMaxHeight: Get.size.height / 2,
@@ -73,10 +75,10 @@ class CreateActionModal extends StatelessWidget {
                         .map<DropdownMenuItem<int>>(
                             (CategoryAction categoryAction) {
                       return DropdownMenuItem<int>(
-                        value: categoryAction.id,
+                        value: int.parse(categoryAction.id),
                         child: Text(categoryAction.descricao!),
                       );
-                    }),
+                    })
                   ],
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -133,7 +135,7 @@ class CreateActionModal extends StatelessWidget {
                 ],
               ),
             ],
-          ))
+          )
         ],
       ),
     );

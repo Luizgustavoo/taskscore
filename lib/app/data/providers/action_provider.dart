@@ -33,11 +33,7 @@ class ActionApiClient {
   getAllCategoryAction() async {
     try {
       var actionUrl = Uri.parse('$baseUrl/listarcategoriaacao');
-      var response = await httpClient.get(actionUrl, headers: {
-        "Accept": "application/json",
-        // "Authorization": token,
-      });
-      print(json.decode(response.body));
+      var response = await httpClient.get(actionUrl);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
@@ -104,9 +100,9 @@ class ActionApiClient {
       var response = await httpClient.post(actionUrl, body: {
         "acao": actionModel.acao,
         "nota": actionModel.nota.toString(),
-        "tipo_acao": actionModel.tipoAcao,
         "categoria_id": actionModel.categoriaacaoId.toString()
       });
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {

@@ -24,14 +24,10 @@ class ActionRepository {
 
     var response = await apiClient.getAllCategoryAction();
 
-    try {
-      if (response != null) {
-        response['objeto'].forEach((e) {
-          list.add(CategoryAction.fromJson(e));
-        });
-      }
-    } catch (e) {
-      print(e);
+    if (response != null) {
+      response['objeto'].forEach((e) {
+        list.add(CategoryAction.fromJson(e));
+      });
     }
 
     return list;

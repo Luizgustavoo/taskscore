@@ -100,10 +100,13 @@ class ActionController extends GetxController {
   }
 
   Future<void> createAction() async {
+    print("Nome da Ação: ${acaoController.text}");
+    print("Nota: ${notaController.text}");
+    print("Categoria: ${categorySelected!.value}");
+
     ActionModel actionModel = ActionModel(
       acao: acaoController.text,
       nota: notaController.text,
-      // tipoAcao: tipoAcao,
       categoriaacaoId: categorySelected!.value.toString(),
     );
     try {
