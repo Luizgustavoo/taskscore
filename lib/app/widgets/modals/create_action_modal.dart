@@ -43,6 +43,7 @@ class CreateActionModal extends StatelessWidget {
               const SizedBox(height: 15),
               TextFormField(
                 controller: controller.notaController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Nota',
                   border: OutlineInputBorder(
@@ -119,9 +120,18 @@ class CreateActionModal extends StatelessWidget {
                         ),
                       ),
                       onPressed: () async {
-                        final ActionController actionController =
-                            ActionController();
-                        actionController.createAction();
+                        var mensagem = await controller.createAction();
+                        Get.back();
+                        if (mensagem['code'] != null && mensagem['code'] == 0) {
+                          Get.snackbar('Sucesso', mensagem['objeto'],
+                              backgroundColor: Colors.green,
+                              colorText: Colors.white);
+                          controller.getActions();
+                        } else {
+                          Get.snackbar('Falha', mensagem['objeto'],
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white);
+                        }
                       },
                       child: const Text(
                         'Salvar',

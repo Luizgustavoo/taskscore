@@ -68,8 +68,8 @@ class ActionApiClient {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }
-    } catch (error) {
-      print('Erro ao enviar dados: $error');
+    } catch (e) {
+      Exception(e);
     }
   }
 
@@ -100,9 +100,8 @@ class ActionApiClient {
       var response = await httpClient.post(actionUrl, body: {
         "acao": actionModel.acao,
         "nota": actionModel.nota.toString(),
-        "categoria_id": actionModel.categoriaacaoId.toString()
+        "categoriaacao_id": actionModel.categoriaacaoId.toString()
       });
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {

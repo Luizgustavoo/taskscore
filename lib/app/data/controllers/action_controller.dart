@@ -23,6 +23,8 @@ class ActionController extends GetxController {
 
   final repository = Get.put(ActionRepository());
 
+  dynamic mensagem;
+
   @override
   void onInit() {
     getActions();
@@ -99,19 +101,16 @@ class ActionController extends GetxController {
     }
   }
 
-  Future<void> createAction() async {
-    print("Nome da Ação: ${acaoController.text}");
-    print("Nota: ${notaController.text}");
-    print("Categoria: ${categorySelected!.value}");
-
+  createAction() async {
     ActionModel actionModel = ActionModel(
       acao: acaoController.text,
       nota: notaController.text,
       categoriaacaoId: categorySelected!.value.toString(),
     );
     try {
-      listActions.value = await repository.createAction(actionModel);
+      mensagem = await repository.createAction(actionModel);
       update();
+      return mensagem;
     } catch (e) {
       Exception(e);
     }

@@ -24,7 +24,9 @@ class CustomListActionCard extends StatelessWidget {
             onCancel: () {
               Get.back();
             },
-            onConfirm: () {},
+            onConfirm: () {
+              print('aqui');
+            },
           );
         }
         return false;
