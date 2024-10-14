@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskscore/app/data/models/student_model.dart';
 import 'package:taskscore/app/data/repositories/student_repository.dart';
@@ -11,6 +12,8 @@ class StudentController extends GetxController {
   List<int> selectedStudents = [];
 
   RxList<Student> listStudents = <Student>[].obs;
+
+  TextEditingController observation = TextEditingController();
 
   final repository = Get.find<StudentRepository>();
   String? dia;
@@ -65,5 +68,26 @@ class StudentController extends GetxController {
     }
 
     update();
+  }
+
+  sendObservationForStudents() async {
+    final list = selectedStudents;
+
+    final response =
+        await repository.sendObservationForStudents(list, observation.text);
+    selectedStudents.clear();
+    selectedIndexes.clear();
+    return response;
+  }
+
+  removeObservation(dynamic id) async {
+    try {
+      final response = await repository.removeObservation(id);
+      getStudents();
+      update();
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
   }
 }

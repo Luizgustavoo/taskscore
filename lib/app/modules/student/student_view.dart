@@ -5,9 +5,11 @@ import 'package:taskscore/app/data/base_url.dart';
 import 'package:taskscore/app/data/controllers/action_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
 import 'package:taskscore/app/data/models/action_model_student.dart';
+import 'package:taskscore/app/modules/student/student_detail_view.dart';
 import 'package:taskscore/app/widgets/custom_app_bar.dart';
 import 'package:taskscore/app/widgets/custom_student_card.dart';
 import 'package:taskscore/app/widgets/modals/action_modal.dart';
+import 'package:taskscore/app/widgets/modals/observation_modal.dart';
 
 class StudentView extends GetView<StudentController> {
   const StudentView({super.key});
@@ -44,10 +46,20 @@ class StudentView extends GetView<StudentController> {
                   itemCount: controller.listStudents.length,
                   itemBuilder: (context, index) {
                     controller.allIndexs.add(index);
+
                     return Obx(() {
                       var fotoPessoa =
                           controller.listStudents[index].fotoPessoa.toString();
                       return CustomStudentCard(
+                        heroTag:
+                            'studentHeroTag_${controller.listStudents[index].idMatricula}',
+                        onLongPress: () {
+                          Get.to(
+                              () => StudentDetailsView(
+                                  controller: controller,
+                                  student: controller.listStudents[index]),
+                              transition: Transition.fadeIn);
+                        },
                         title: controller.listStudents[index].nomePessoa!,
                         avatar: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -231,6 +243,41 @@ class StudentView extends GetView<StudentController> {
                   },
                 );
               },
+            ),
+            SpeedDialChild(
+              backgroundColor: Colors.grey,
+              child: const SizedBox(
+                width: 40,
+                height: 40,
+                child: Icon(
+                  Icons.remove_red_eye_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              label: 'Observações',
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return CreateObservationModal(
+                      studentController: controller,
+                    );
+                  },
+                );
+              },
+            ),
+            SpeedDialChild(
+              backgroundColor: Colors.grey,
+              child: const SizedBox(
+                width: 40,
+                height: 40,
+                child: Icon(
+                  Icons.add_task_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              label: 'Frequência',
+              onTap: () {},
             ),
           ],
         ),

@@ -1,11 +1,13 @@
 import 'package:taskscore/app/data/models/action_model_student.dart';
+import 'package:taskscore/app/data/models/observation_model.dart';
 
 class Student {
-  String? idMatricula;
+  dynamic idMatricula;
   String? nomePessoa;
   String? fotoPessoa;
   dynamic cash;
   List<ActionModelStudent>? actions;
+  List<Observation>? observations;
 
   Student(
       {this.idMatricula,
@@ -25,17 +27,26 @@ class Student {
         actions!.add(ActionModelStudent.fromJson(v));
       });
     }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id_matricula'] = idMatricula;
-    data['nome_pessoa'] = nomePessoa;
-    data['foto_pessoa'] = fotoPessoa;
-    data['cash'] = cash;
-    if (actions != null) {
-      data['acoes'] = actions!.map((v) => v.toJson()).toList();
+    if (json['observacoes'] != null) {
+      observations = <Observation>[];
+      json['observacoes'].forEach((v) {
+        observations!.add(Observation.fromJson(v));
+      });
     }
-    return data;
+
+    Map<String, dynamic> toJson() {
+      final Map<String, dynamic> data = <String, dynamic>{};
+      data['id_matricula'] = idMatricula;
+      data['nome_pessoa'] = nomePessoa;
+      data['foto_pessoa'] = fotoPessoa;
+      data['cash'] = cash;
+      if (actions != null) {
+        data['acoes'] = actions!.map((v) => v.toJson()).toList();
+      }
+      if (observations != null) {
+        data['observacoes'] = observations!.map((v) => v.toJson()).toList();
+      }
+      return data;
+    }
   }
 }

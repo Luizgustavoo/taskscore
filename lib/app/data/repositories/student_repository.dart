@@ -17,4 +17,24 @@ class StudentRepository {
 
     return list;
   }
+
+  sendObservationForStudents(List<int> students, String observation) async {
+    try {
+      var response =
+          await apiClient.sendObservationForStudents(students, observation);
+
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  removeObservation(dynamic id) async {
+    try {
+      var response = await apiClient.removeObservation(id);
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
 }
