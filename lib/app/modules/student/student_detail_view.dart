@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:intl/intl.dart'; // Para formatação de datas
+import 'package:share_plus/share_plus.dart';
 import 'package:taskscore/app/data/base_url.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
 import 'package:taskscore/app/data/models/student_model.dart';
+import 'dart:io';
+
+import 'package:taskscore/app/utils/Services.dart'; // Para salvar arquivos localmente
 
 class StudentDetailsView extends StatelessWidget {
   final Student student;
@@ -94,6 +103,13 @@ class StudentDetailsView extends StatelessWidget {
                                     ),
                                     contentPadding: EdgeInsets.zero,
                                     title: Text(
+                                        Services.formatDate(
+                                            observation.createdAt),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    subtitle: Text(
                                       observation.observacao?.toUpperCase() ??
                                           'OBSERVAÇÃO SEM DESCRIÇÃO',
                                       style: const TextStyle(
@@ -115,6 +131,93 @@ class StudentDetailsView extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Chamar a função para gerar e compartilhar o PDF
+          if (student.observations!.isNotEmpty) {
+            await generateAndSharePdf();
+          } else {
+            Get.snackbar(
+              'Falha',
+              "Nenhuma observação cadastrada para o(a) aluno(a) selecionado(a)",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              duration: const Duration(seconds: 2),
+              snackPosition: SnackPosition.TOP,
+            );
+          }
+        },
+        child: const Icon(
+          Icons.download,
+        ),
+      ),
     );
+  }
+
+  Future<void> generateAndSharePdf() async {
+    // Criar o documento PDF
+    final pdf = pw.Document();
+
+    // Adicionar uma página com as observações ao PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text(
+              "Relatório ${student.nomePessoa}",
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
+            pw.SizedBox(height: 20),
+
+            // Verificar se há observações
+            student.observations != null && student.observations!.isNotEmpty
+                ? pw.ListView.builder(
+                    itemCount: student.observations!.length,
+                    itemBuilder: (pw.Context context, int index) {
+                      final observation = student.observations![index];
+
+                      return pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text(
+                            "Data: ${Services.formatDate(observation.createdAt)}",
+                            style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            "Observação: ${observation.observacao?.toUpperCase() ?? 'OBSERVAÇÃO SEM DESCRIÇÃO'}",
+                            style: const pw.TextStyle(fontSize: 14),
+                          ),
+                          pw.SizedBox(height: 10),
+                          pw.Divider(),
+                        ],
+                      );
+                    },
+                  )
+                : pw.Text(
+                    'Nenhuma observação disponível.',
+                    style: const pw.TextStyle(fontSize: 16),
+                  ),
+          ],
+        ),
+      ),
+    );
+
+    // Salvar o PDF em bytes
+    Uint8List pdfBytes = await pdf.save();
+
+    // Obter o diretório temporário para salvar o arquivo
+    final directory = await getTemporaryDirectory();
+    final file = File("${directory.path}/student_observations.pdf");
+
+    // Escrever os bytes do PDF no arquivo
+    await file.writeAsBytes(pdfBytes);
+
+    // Compartilhar o arquivo PDF
+    await Share.shareXFiles([XFile(file.path)],
+        text: "Relatório de observações do aluno.");
   }
 }

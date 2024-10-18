@@ -29,6 +29,28 @@ class StudentRepository {
     }
   }
 
+  sendFrequencyForStudents(List<int> selectedStudents,
+      List<int> nonSelectedStudents, String data) async {
+    try {
+      var response = await apiClient.sendFrequencyForStudents(
+          selectedStudents, nonSelectedStudents, data);
+
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  existFrequencyForStudents(String data) async {
+    try {
+      var response = await apiClient.existFrequencyForStudents(data);
+
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
   removeObservation(dynamic id) async {
     try {
       var response = await apiClient.removeObservation(id);

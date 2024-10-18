@@ -86,4 +86,55 @@ class StudentApiClient {
     }
     return null;
   }
+
+  sendFrequencyForStudents(List<int> selectedStudents,
+      List<int> nonSelectedStudents, String data) async {
+    final Uri actionUrl = Uri.parse('$baseUrl/lancarfrequencia');
+    try {
+      final Map<String, dynamic> requestBody = {
+        'alunos_selecionados': selectedStudents,
+        'alunos_nao_selecionados': nonSelectedStudents,
+        'data': data,
+        'usuario_id': AuthStorage.getTeacherId()
+      };
+
+      final http.Response response = await http.post(
+        actionUrl,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  existFrequencyForStudents(String data) async {
+    final Uri actionUrl = Uri.parse('$baseUrl/existefrequencia');
+    try {
+      final Map<String, dynamic> requestBody = {
+        'data': data,
+        'usuario_id': AuthStorage.getTeacherId()
+      };
+
+      final http.Response response = await http.post(
+        actionUrl,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      Exception(e);
+    }
+  }
 }

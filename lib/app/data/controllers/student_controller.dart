@@ -33,6 +33,38 @@ class StudentController extends GetxController {
     }
   }
 
+  sendFrequencyForStudents(String data) async {
+    // Obtendo os idsMatricula da lista de alunos
+    List<dynamic> idsMatricula =
+        listStudents.map((student) => student.idMatricula).toList();
+
+    // Verificando se os idsMatricula são do tipo int
+    List<int> idsMatriculaInt = idsMatricula
+        .map((id) => id is int ? id : int.tryParse(id.toString()) ?? -1)
+        .toList();
+
+    // Verificando se os selectedStudents são do tipo int
+    List<int> selectedIds = selectedStudents
+        .map((id) => id is int ? id : int.tryParse(id.toString()) ?? -1)
+        .toList();
+
+    List<int> studentsNotInSelected = idsMatriculaInt
+        .where((student) => !selectedIds.contains(student))
+        .toList();
+
+    final response = await repository.sendFrequencyForStudents(
+        selectedIds, studentsNotInSelected, data);
+    selectedStudents.clear();
+    selectedIndexes.clear();
+
+    return response;
+  }
+
+  existFrequencyForStudents(String data) async {
+    final response = await repository.existFrequencyForStudents(data);
+    return response;
+  }
+
   void toggleStudentSelection2(int index, int idStudent) {
     if (isSelection == false) {
       selectedIndexes.clear();

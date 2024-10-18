@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:taskscore/app/data/base_url.dart';
 import 'package:taskscore/app/data/controllers/action_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
@@ -21,6 +22,8 @@ class StudentView extends GetView<StudentController> {
     final isTablet = shortestSide > 600;
 
     final buttonSize = isTablet ? const Size(65, 65) : const Size(50, 50);
+
+    DateTime selectedDate = DateTime.now();
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
@@ -277,7 +280,179 @@ class StudentView extends GetView<StudentController> {
                 ),
               ),
               label: 'Frequência',
-              onTap: () {},
+              onTap: () {
+                // Variável para armazenar a data selecionada
+
+                // Abre o modal
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Lançar Frequência',
+                            style:
+                                TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                          ),
+                          Divider(
+                            thickness: 2,
+                            endIndent: 20,
+                            color: Colors.blue.shade400,
+                          ),
+                          TextField(
+                            readOnly: true, // O campo é somente leitura
+                            decoration: const InputDecoration(
+                              labelText: 'Data Selecionada',
+                              hintText: 'Selecione uma data',
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: TextEditingController(
+                                text: DateFormat('dd/MM/yyyy').format(
+                                    selectedDate)), // Formatação da data
+                            onTap: () async {
+                              // Ao clicar, abre o DatePicker
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: selectedDate,
+                                firstDate: selectedDate
+                                    .subtract(const Duration(days: 30)),
+                                lastDate: selectedDate,
+                              );
+
+                              if (newDate != null) {
+                                selectedDate =
+                                    newDate; // Atualiza a data selecionada
+                                // Atualiza o TextField com a nova data
+                                (context as Element)
+                                    .markNeedsBuild(); // Atualiza a UI
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: const Text(
+                                    'Cancelar',
+                                    style: TextStyle(fontFamily: 'Poppins'),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: 100,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    var mensagem = await controller
+                                        .existFrequencyForStudents(
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(selectedDate));
+
+                                    if (mensagem['code'] != null &&
+                                        mensagem['code'] == 1) {
+                                      Get.defaultDialog(
+                                        title: "Confirmação",
+                                        titleStyle: const TextStyle(
+                                            fontFamily: 'Poppinss',
+                                            color: Colors.black87),
+                                        middleText:
+                                            "Já existe lançamento nessa data para seu usuário. Se continuar será substituido?",
+                                        middleTextStyle: const TextStyle(
+                                            fontFamily: 'Poppins'),
+                                        confirm: ElevatedButton(
+                                          onPressed: () async {
+                                            var retorno = await controller
+                                                .sendFrequencyForStudents(
+                                                    DateFormat('yyyy-MM-dd')
+                                                        .format(selectedDate));
+                                            Get.back();
+                                            Get.back();
+                                            if (retorno['code'] != null &&
+                                                retorno['code'] == 0) {
+                                              Get.snackbar(
+                                                  'Sucesso', retorno['objeto'],
+                                                  backgroundColor: Colors.green,
+                                                  colorText: Colors.white);
+                                            } else {
+                                              Get.snackbar(
+                                                  'Falha', retorno['objeto'],
+                                                  backgroundColor: Colors.red,
+                                                  colorText: Colors.white);
+                                            }
+                                          },
+                                          child: const Text(
+                                            "Sim",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                        cancel: ElevatedButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: const Text(
+                                            "Não",
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      var retorno = await controller
+                                          .sendFrequencyForStudents(
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(selectedDate));
+                                      Get.back();
+                                      if (retorno['code'] != null &&
+                                          retorno['code'] == 0) {
+                                        Get.snackbar(
+                                            'Sucesso', retorno['objeto'],
+                                            backgroundColor: Colors.green,
+                                            colorText: Colors.white);
+                                      } else {
+                                        Get.snackbar('Falha', retorno['objeto'],
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      }
+                                    }
+
+                                    selectedDate = DateTime.now();
+                                  },
+                                  child: const Text(
+                                    'Salvar',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),
