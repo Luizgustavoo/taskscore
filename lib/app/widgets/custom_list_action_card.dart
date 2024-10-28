@@ -28,7 +28,6 @@ class CustomListActionCard extends StatelessWidget {
               Get.back();
             },
             onConfirm: () async {
-              print(action.id);
               var mensagem = await controller.removeAction(action.id!);
               Get.back();
               if (mensagem['code'] != null && mensagem['code'] == 0) {

@@ -118,8 +118,9 @@ class ActionController extends GetxController {
 
   removeAction(dynamic id) async {
     try {
-      listActions.value = await repository.removeAction(id);
+      mensagem = await repository.removeAction(id);
       update();
+      return mensagem;
     } catch (e) {
       Exception(e);
     }
