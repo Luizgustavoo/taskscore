@@ -47,6 +47,7 @@ class ActionView extends GetView<ActionController> {
                     final action = controller.listActions[index];
                     return CustomListActionCard(
                       action: action,
+                      controller: controller,
                     );
                   },
                 ),

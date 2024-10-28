@@ -73,7 +73,7 @@ class ActionApiClient {
     }
   }
 
-  removeAction(int id) async {
+  removeActionStudent(int id) async {
     var actionUrl = Uri.parse('$baseUrl/removeracaoaluno');
     try {
       var response =
@@ -108,6 +108,29 @@ class ActionApiClient {
         Get.snackbar(
           'Falha',
           'Erro ao cadastrar',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Exception(e);
+    }
+    return null;
+  }
+
+  removeAction(dynamic id) async {
+    var actionUrl = Uri.parse('$baseUrl/removeracao');
+    try {
+      var response = await httpClient.post(actionUrl, body: {
+        'id': id.toString(),
+      });
+      print(response.body);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401) {
+        Get.snackbar(
+          'Falha',
+          'Ação não removida',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );

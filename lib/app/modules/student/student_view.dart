@@ -116,7 +116,7 @@ class StudentView extends GetView<StudentController> {
                                                                   Get.put(
                                                                       ActionController());
                                                               await actionController
-                                                                  .removeAction(
+                                                                  .removeActionStudent(
                                                                       actions[i]
                                                                           .id!);
 

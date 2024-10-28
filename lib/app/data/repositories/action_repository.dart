@@ -43,9 +43,9 @@ class ActionRepository {
     }
   }
 
-  removeAction(int id) async {
+  removeActionStudent(int id) async {
     try {
-      var response = await apiClient.removeAction(id);
+      var response = await apiClient.removeActionStudent(id);
       return response;
     } catch (e) {
       Exception(e);
@@ -55,6 +55,15 @@ class ActionRepository {
   createAction(ActionModel actionModel) async {
     try {
       var response = await apiClient.createAction(actionModel);
+      return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  removeAction(dynamic id) async {
+    try {
+      var response = await apiClient.removeAction(id);
       return response;
     } catch (e) {
       Exception(e);

@@ -1,5 +1,5 @@
 class ActionModel {
-  String? id;
+  dynamic id;
   String? acao;
   String? nota;
   String? tipoAcao;

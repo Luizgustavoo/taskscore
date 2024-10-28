@@ -92,9 +92,9 @@ class ActionController extends GetxController {
     return listActionStudent;
   }
 
-  Future<void> removeAction(int id) async {
+  Future<void> removeActionStudent(int id) async {
     try {
-      listActions.value = await repository.removeAction(id);
+      listActions.value = await repository.removeActionStudent(id);
       update();
     } catch (e) {
       Exception(e);
@@ -111,6 +111,15 @@ class ActionController extends GetxController {
       mensagem = await repository.createAction(actionModel);
       update();
       return mensagem;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  removeAction(dynamic id) async {
+    try {
+      listActions.value = await repository.removeAction(id);
+      update();
     } catch (e) {
       Exception(e);
     }

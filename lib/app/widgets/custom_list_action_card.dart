@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:taskscore/app/data/controllers/action_controller.dart';
 import 'package:taskscore/app/data/models/action_model.dart';
 import 'package:taskscore/app/widgets/show_confirmation_dialog.dart';
 
@@ -7,9 +8,11 @@ class CustomListActionCard extends StatelessWidget {
   const CustomListActionCard({
     super.key,
     required this.action,
+    required this.controller,
   });
 
   final ActionModel action;
+  final ActionController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +27,18 @@ class CustomListActionCard extends StatelessWidget {
             onCancel: () {
               Get.back();
             },
-            onConfirm: () {
-              print('aqui');
+            onConfirm: () async {
+              print(action.id);
+              var mensagem = await controller.removeAction(action.id!);
+              Get.back();
+              if (mensagem['code'] != null && mensagem['code'] == 0) {
+                Get.snackbar('Sucesso', mensagem['objeto'],
+                    backgroundColor: Colors.green, colorText: Colors.white);
+                controller.getActions();
+              } else {
+                Get.snackbar('Falha', mensagem['objeto'],
+                    backgroundColor: Colors.red, colorText: Colors.white);
+              }
             },
           );
         }

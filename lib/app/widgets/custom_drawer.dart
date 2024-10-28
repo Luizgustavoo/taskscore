@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskscore/app/data/base_url.dart';
 import 'package:taskscore/app/data/controllers/home_controller.dart';
+import 'package:taskscore/app/routes/app_routes.dart';
 import 'package:taskscore/app/utils/auth_storage.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -59,7 +60,17 @@ class CustomDrawer extends StatelessWidget {
                 style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
               ),
               onTap: () {
-                Get.toNamed('/action');
+                Get.toNamed(Routes.ACTION);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.description, color: Colors.black87),
+              title: const Text(
+                'Chamadas',
+                style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
+              ),
+              onTap: () {
+                Get.toNamed(Routes.FREQUENCY);
               },
             ),
             ListTile(
