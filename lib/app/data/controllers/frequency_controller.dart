@@ -1,6 +1,13 @@
 import 'package:get/get.dart';
+import 'package:taskscore/app/data/models/frequency_model.dart';
 
 class FrequencyController extends GetxController {
+  RxList<Frequency> listFrequency = <Frequency>[].obs;
+
+  String? dia;
+  String? idHorario;
+  String? idOficina;
+  String? numeroAula;
   var students = [
     {
       'name': 'Adam Diego Bonfati',

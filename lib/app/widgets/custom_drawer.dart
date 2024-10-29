@@ -74,19 +74,6 @@ class CustomDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(
-                Icons.person_search,
-                color: Colors.black87,
-              ),
-              title: const Text(
-                'Listagem de Frequência',
-                style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
-              ),
-              onTap: () {
-                Get.toNamed('/action');
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.exit_to_app, color: Colors.red),
               title: const Text('Sair',
                   style: TextStyle(fontFamily: 'Poppins', fontSize: 15)),

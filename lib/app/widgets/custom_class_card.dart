@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskscore/app/data/controllers/class_controller.dart';
+import 'package:taskscore/app/data/controllers/frequency_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
 
 class CustomClassCard extends StatelessWidget {
@@ -85,6 +86,15 @@ class CustomClassCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                      IconButton(
+                          onPressed: () {
+                            studentController.viewFrequency();
+                          },
+                          icon: const Icon(
+                            size: 30,
+                            color: Colors.white,
+                            Icons.person_search,
+                          ))
                     ],
                   ),
                 ),

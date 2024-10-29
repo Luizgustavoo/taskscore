@@ -137,4 +137,33 @@ class StudentApiClient {
       Exception(e);
     }
   }
+
+  viewFrequency(String dia, String aula, String horario, String oficina) async {
+    try {
+      var frequencyUrl = Uri.parse('$baseUrl/alunosfrequencia');
+      var response = await httpClient.post(frequencyUrl, headers: {
+        "Accept": "application/json",
+        // "Authorization": token,
+      }, body: {
+        "dia": dia,
+        "aula": aula,
+        "horario": horario,
+        "oficina": oficina,
+        "teacher_id": AuthStorage.getTeacherId().toString()
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+      }
+    } catch (err) {
+      throw Exception(err);
+    }
+    return null;
+  }
 }

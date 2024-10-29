@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:taskscore/app/data/models/frequency_model.dart';
 import 'package:taskscore/app/data/models/student_model.dart';
 import 'package:taskscore/app/data/repositories/student_repository.dart';
 
@@ -12,6 +13,7 @@ class StudentController extends GetxController {
   List<int> selectedStudents = [];
 
   RxList<Student> listStudents = <Student>[].obs;
+  RxList<Frequency> listFrequency = <Frequency>[].obs;
 
   TextEditingController observation = TextEditingController();
 
@@ -118,6 +120,17 @@ class StudentController extends GetxController {
       getStudents();
       update();
       return response;
+    } catch (e) {
+      Exception(e);
+    }
+  }
+
+  Future<void> viewFrequency(
+      String dia, String numeroAula, String idHorario, String idOficina) async {
+    try {
+      listFrequency.value =
+          await repository.viewFrequency(dia, numeroAula, idHorario, idOficina);
+      update();
     } catch (e) {
       Exception(e);
     }

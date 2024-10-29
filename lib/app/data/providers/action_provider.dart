@@ -124,7 +124,6 @@ class ActionApiClient {
       var response = await httpClient.post(actionUrl, body: {
         'id': id.toString(),
       });
-      print(response.body);
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
