@@ -8,33 +8,55 @@ class FrequencyController extends GetxController {
   String? idHorario;
   String? idOficina;
   String? numeroAula;
-  var students = [
-    {
-      'name': 'Adam Diego Bonfati',
-      'attendance': ['P', 'F', 'P', 'P', 'P']
-    },
-    {
-      'name': 'Adryan Gabriel Sorecchia',
-      'attendance': ['P', 'P', 'P', 'F', 'P']
-    },
-    {
-      'name': 'Alícia Couto de Souza',
-      'attendance': ['P', 'P', 'P', 'P', 'P']
-    },
-    {
-      'name': 'Alisson Alves Pelissão',
-      'attendance': ['F', 'P', 'P', 'P', 'P']
-    },
-    {
-      'name': 'Amabilly Milena Farias',
-      'attendance': ['P', 'F', 'P', 'P', 'P']
-    },
+
+  List<Student> students = [
+    Student(
+      name: 'Adam Diego Bonfati',
+      dia01: 'P',
+      dia02: 'F',
+      dia03: 'F',
+      dia04: 'P',
+      dia05: 'P',
+    ),
+
+    Student(
+      name: 'Adam Diego Bonfati',
+      dia01: 'P',
+      dia02: 'F',
+      dia03: 'F',
+      dia04: 'P',
+      dia05: 'P',
+    ),
+
+    Student(
+      name: 'Luiz viadao',
+      dia01: 'F',
+      dia02: 'F',
+      dia03: 'F',
+      dia04: 'P',
+      dia05: 'P',
+    ),
+
     // Adicione mais alunos fictícios
   ].obs;
 
   // Função para obter frequência de um aluno por índice
-  int get numberOfDays =>
-      (students.isNotEmpty && students[0]['attendance'] != null)
-          ? (students[0]['attendance'] as List).length
-          : 0;
+  int get numberOfDays => (students.isNotEmpty) ? 5 : 0;
+}
+
+class Student {
+  String? name;
+  dynamic dia01;
+  dynamic dia02;
+  dynamic dia03;
+  dynamic dia04;
+  dynamic dia05;
+  Student({
+    this.name,
+    this.dia01,
+    this.dia02,
+    this.dia03,
+    this.dia04,
+    this.dia05,
+  });
 }

@@ -56,8 +56,15 @@ class FrequencyView extends GetView<FrequencyController> {
   // Constrói as linhas da DataTable (primeira célula será o nome, as demais serão P ou F)
   List<DataRow> _buildRows(FrequencyController controller) {
     return controller.students.map((student) {
-      final String name = student['name'] as String;
-      final List<String> attendance = student['attendance'] as List<String>;
+      final String name = student.name as String;
+      final List<String> attendance = [
+        student.dia01 as String,
+        student.dia02 as String,
+        student.dia03 as String,
+        student.dia04 as String,
+        student.dia05 as String,
+        // Adicione mais dias conforme necessário
+      ];
 
       List<DataCell> cells = [
         DataCell(Text(name)),
