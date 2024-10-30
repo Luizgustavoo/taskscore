@@ -87,7 +87,7 @@ class CustomClassCard extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final response = await studentController.viewFrequency(
+                    await studentController.viewFrequency(
                       dia: dia,
                       numeroAula: studentController.numeroAula =
                           aula['numeroAula']!,
@@ -98,15 +98,7 @@ class CustomClassCard extends StatelessWidget {
                       anoMes: '$selectedYear-$selectedMonth',
                     );
 
-                    if (response != null &&
-                        response is List<Map<String, dynamic>>) {
-                      studentController.updateFrequencyData(response);
-
-                      Get.to(() => const FrequencyView());
-                    } else {
-                      Get.snackbar('Erro',
-                          'Não foi possível carregar os dados de frequência.');
-                    }
+                    Get.to(() => const FrequencyView());
                   },
                   child: const Text('Visualizar'),
                 ),

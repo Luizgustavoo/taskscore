@@ -132,10 +132,9 @@ class StudentController extends GetxController {
       String? idOficina,
       String? anoMes}) async {
     try {
-      final response = listFrequency.value = await repository.viewFrequency(
+      listFrequency.value = await repository.viewFrequency(
           dia!, numeroAula!, idHorario!, idOficina!, anoMes!);
       update();
-      return response['objeto'];
     } catch (e) {
       Exception(e);
     }
@@ -150,6 +149,5 @@ class StudentController extends GetxController {
   }
 
   // Contar o número de dias (colunas) com base no primeiro estudante da lista
-  int get numberOfDays =>
-      students.isNotEmpty ? students[0]['attendance'].length : 0;
+  int get numberOfDays => 31;
 }

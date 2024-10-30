@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:taskscore/app/data/controllers/frequency_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
 
-class FrequencyView extends GetView<FrequencyController> {
+class FrequencyView extends GetView<StudentController> {
   const FrequencyView({super.key});
 
   @override
@@ -33,7 +33,7 @@ class FrequencyView extends GetView<FrequencyController> {
   }
 
   // Constrói as colunas da DataTable (primeira coluna será o nome dos alunos, as demais serão os dias)
-  List<DataColumn> _buildColumns(FrequencyController controller) {
+  List<DataColumn> _buildColumns(StudentController controller) {
     List<DataColumn> columns = [
       const DataColumn(
         label: Text('Aluno', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -54,15 +54,42 @@ class FrequencyView extends GetView<FrequencyController> {
   }
 
   // Constrói as linhas da DataTable (primeira célula será o nome, as demais serão P ou F)
-  List<DataRow> _buildRows(FrequencyController controller) {
-    return controller.students.map((student) {
-      final String name = student.name as String;
+  List<DataRow> _buildRows(StudentController controller) {
+    return controller.listFrequency.map((student) {
+      final String name = student.nomePessoa as String;
       final List<String> attendance = [
-        student.dia01 as String,
-        student.dia02 as String,
-        student.dia03 as String,
-        student.dia04 as String,
-        student.dia05 as String,
+        student.dia01 ?? '',
+        student.dia02 ?? '',
+        student.dia03 ?? '',
+        student.dia04 ?? '',
+        student.dia05 ?? '',
+        student.dia06 ?? '',
+        student.dia07 ?? '',
+        student.dia08 ?? '',
+        student.dia09 ?? '',
+        student.dia10 ?? '',
+        student.dia11 ?? '',
+        student.dia12 ?? '',
+        student.dia13 ?? '',
+        student.dia14 ?? '',
+        student.dia15 ?? '',
+        student.dia16 ?? '',
+        student.dia17 ?? '',
+        student.dia18 ?? '',
+        student.dia19 ?? '',
+        student.dia20 ?? '',
+        student.dia21 ?? '',
+        student.dia22 ?? '',
+        student.dia23 ?? '',
+        student.dia24 ?? '',
+        student.dia25 ?? '',
+        student.dia26 ?? '',
+        student.dia27 ?? '',
+        student.dia28 ?? '',
+        student.dia29 ?? '',
+        student.dia30 ?? '',
+        student.dia31 ?? '',
+
         // Adicione mais dias conforme necessário
       ];
 
