@@ -125,14 +125,31 @@ class StudentController extends GetxController {
     }
   }
 
-  Future<void> viewFrequency(
-      String dia, String numeroAula, String idHorario, String idOficina) async {
+  viewFrequency(
+      {String? dia,
+      String? numeroAula,
+      String? idHorario,
+      String? idOficina,
+      String? anoMes}) async {
     try {
-      listFrequency.value =
-          await repository.viewFrequency(dia, numeroAula, idHorario, idOficina);
+      final response = listFrequency.value = await repository.viewFrequency(
+          dia!, numeroAula!, idHorario!, idOficina!, anoMes!);
       update();
+      return response['objeto'];
     } catch (e) {
       Exception(e);
     }
   }
+
+  RxList<Map<String, dynamic>> students = <Map<String, dynamic>>[].obs;
+
+  // Método para processar a resposta JSON e atualizar a lista de estudantes
+  void updateFrequencyData(List<Map<String, dynamic>> response) {
+    listFrequency.value =
+        response.map((item) => Frequency.fromJson(item)).toList();
+  }
+
+  // Contar o número de dias (colunas) com base no primeiro estudante da lista
+  int get numberOfDays =>
+      students.isNotEmpty ? students[0]['attendance'].length : 0;
 }

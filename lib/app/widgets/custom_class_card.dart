@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskscore/app/data/controllers/class_controller.dart';
-import 'package:taskscore/app/data/controllers/frequency_controller.dart';
 import 'package:taskscore/app/data/controllers/student_controller.dart';
+import 'package:taskscore/app/modules/frequency/frequency_view.dart';
 
 class CustomClassCard extends StatelessWidget {
   const CustomClassCard({
@@ -17,6 +17,106 @@ class CustomClassCard extends StatelessWidget {
   final List<Map<String, String>>? aulas;
   final ClassController controller;
   final StudentController studentController;
+
+  void showSearchDialog(BuildContext context, Map<String, String> aula) {
+    String selectedMonth = '01';
+    int currentYear = DateTime.now().year;
+    int selectedYear = currentYear;
+    List<String> months =
+        List.generate(12, (index) => (index + 1).toString().padLeft(2, '0'));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Selecionar Data'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: DropdownButton<String>(
+                          value: selectedMonth,
+                          items: months.map((month) {
+                            return DropdownMenuItem(
+                              value: month,
+                              child: Text(month),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedMonth = value!;
+                            });
+                          },
+                          hint: const Text('Mês'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: DropdownButton<int>(
+                          value: selectedYear,
+                          items: [currentYear, currentYear - 1, currentYear - 2]
+                              .map((year) {
+                            return DropdownMenuItem(
+                              value: year,
+                              child: Text('$year'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedYear = value!;
+                            });
+                          },
+                          hint: const Text('Ano'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    final response = await studentController.viewFrequency(
+                      dia: dia,
+                      numeroAula: studentController.numeroAula =
+                          aula['numeroAula']!,
+                      idHorario: studentController.idHorario =
+                          aula['idHorario']!,
+                      idOficina: studentController.idOficina =
+                          aula['idOficina']!,
+                      anoMes: '$selectedYear-$selectedMonth',
+                    );
+
+                    if (response != null &&
+                        response is List<Map<String, dynamic>>) {
+                      studentController.updateFrequencyData(response);
+
+                      Get.to(() => const FrequencyView());
+                    } else {
+                      Get.snackbar('Erro',
+                          'Não foi possível carregar os dados de frequência.');
+                    }
+                  },
+                  child: const Text('Visualizar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +187,15 @@ class CustomClassCard extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {
-                            studentController.viewFrequency();
-                          },
-                          icon: const Icon(
-                            size: 30,
-                            color: Colors.white,
-                            Icons.person_search,
-                          ))
+                        onPressed: () {
+                          showSearchDialog(context, aula);
+                        },
+                        icon: const Icon(
+                          size: 30,
+                          color: Colors.white,
+                          Icons.person_search,
+                        ),
+                      ),
                     ],
                   ),
                 ),

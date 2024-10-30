@@ -61,13 +61,15 @@ class StudentRepository {
     }
   }
 
-  viewFrequency(String dia, String aula, String horario, String oficina) async {
+  viewFrequency(String dia, String aula, String horario, String oficina,
+      String anoMes) async {
     List<Frequency> list = <Frequency>[];
 
-    var response = await apiClient.viewFrequency(dia, aula, horario, oficina);
+    var response =
+        await apiClient.viewFrequency(dia, aula, horario, oficina, anoMes);
 
     if (response != null) {
-      response.forEach((e) {
+      response['objeto'].forEach((e) {
         list.add(Frequency.fromJson(e));
       });
     }
